@@ -1,6 +1,6 @@
 fn main() {
-    let x = 5;
-    let y = &x;
-     
-    println!("{:?}", x + y);
+    let mut x = 5;
+    let z = &mut x;
+    *z = 7;
+    println!("{:?}", z);
 }
