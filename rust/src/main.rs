@@ -1,22 +1,42 @@
-use std::path::PathBuf;
-use anyhow::{anyhow, Context, Result};
-
-fn error_me(throw: bool) -> Result<(), usize> {
-    if throw {
-        return Err(anyhow!("this should never be true"));
-    }
-
-    std::fs::read(PathBuf::from("/foo")).context("Add context to error");
-
-    return Ok(());
+fn get_input() -> &'static str {
+    "forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2"
 }
 
-fn main() -> Result<(), usize> {
-    error_me(false)?;
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
 
-    if error_me(true).is_ok() {
-        // smth
+fn parse_line(line: &str) -> Point {
+    let (direction, amount) = line.split_once(" ").expect("must contain whitespace");
+    let amount = str::parse::<i32>(amount).expect("second arh must be integer");
+
+    if direction == "forward" {
+        return Point { x: amount, y: 0 };
     }
 
-    return Ok(());
+    if direction == "up" {
+        return Point { x: 0, y: -amount };
+    }
+
+    Point { x: 0, y: amount }
+}
+
+fn main() {
+    let result = get_input()
+        .lines()
+        .map(|x| parse_line(x))
+        .fold(Point{x: 0, y: 0}, |mut acc, point| {
+            acc.x += point.x;
+            acc.y += point.y;
+            return acc;
+        });
+
+    println!("{:?}, {}", result, result.x * result.y); 
 }
