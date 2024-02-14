@@ -1,21 +1,17 @@
-enum Option2<T> {
-    None,
-    Some(T),
+fn error_me(throw: bool) -> Result<(), usize> {
+    if throw {
+        return Err(69);
+    }
+
+    return Ok(());
 }
 
-impl<T> Option2<T> {
-    fn is_some(&self) -> bool {
-        return match self {
-            Option2::None => false,
-            Option2::Some(_) => true,
-        };
-    }
-}
+fn main() -> Result<(), usize> {
+    error_me(false)?;
 
-fn main() {
-    let foo = Some(5);
-
-    if foo.is_some() {
-        let values = foo.unwrap();
+    if error_me(true).is_ok() {
+        // smth
     }
+
+    return Ok(());
 }
